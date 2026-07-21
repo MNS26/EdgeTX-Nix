@@ -5,11 +5,11 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     edgetx = {
-      url = "https://github.com/MNS26/EdgeTX";
-      submodules = true;
       type = "git";
-      flake = false;
+      url = "https://github.com/MNS26/EdgeTX";
       ref = "linux";
+      submodules = true;
+      flake = false;
     };
   };
 
@@ -157,11 +157,11 @@
         '';
 
         # ---- Firmware package ----
-        mkFirmware = attrs: pkgs.callPackage ./firmware.nix ( { edgetx-src = self; inherit setupSubmodules; NIX_SYSTEM_INCLUDE_DIRS = nixSystemIncludeDirs; } // attrs);
+        mkFirmware = attrs: pkgs.callPackage ./firmware.nix ( { edgetx-src = edgetx; inherit setupSubmodules; NIX_SYSTEM_INCLUDE_DIRS = nixSystemIncludeDirs; } // attrs);
         # ---- Native SDL simulator ----
-        mkSimu = attrs: pkgs.callPackage ./simu.nix ({ edgetx-src = self; inherit fetchContentDeps setupSubmodules; NIX_SYSTEM_INCLUDE_DIRS = nixSystemIncludeDirs; postPatch = postPatch; } // attrs);
+        mkSimu = attrs: pkgs.callPackage ./simu.nix ({ edgetx-src = edgetx; inherit fetchContentDeps setupSubmodules; NIX_SYSTEM_INCLUDE_DIRS = nixSystemIncludeDirs; postPatch = postPatch; } // attrs);
         # ---- Companion + Standalone Simulator (Qt6) ----
-        mkCompanion = attrs: pkgs.callPackage ./companion.nix ({ inherit fetchContentDeps; edgetx-src = self; NIX_SYSTEM_INCLUDE_DIRS = nixSystemIncludeDirs; } // attrs);
+        mkCompanion = attrs: pkgs.callPackage ./companion.nix ({ inherit fetchContentDeps; edgetx-src = edgetx; NIX_SYSTEM_INCLUDE_DIRS = nixSystemIncludeDirs; } // attrs);
         
 
       in
@@ -171,13 +171,11 @@
           edgetx-firmware-tx16s = mkFirmware {
             pcb = "X10";
             pcbrev = "TX16S";
-#            extraCmakeFlags = extraCmakeFlags;
           };
 
           edgetx-simu-tx16s = mkSimu {
             pcb = "X10";
             pcbrev = "TX16S";
-#            extraCmakeFlags = extraCmakeFlags;
           };
 
           edgetx-linux = mkSimu {
