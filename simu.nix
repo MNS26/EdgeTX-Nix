@@ -98,6 +98,8 @@ let
     libclang
     asciitree
   ]);
+  
+  output-name = if cmakeBuildTarget == "simu" then "simu" else "edgetx";
 in
 stdenv.mkDerivation {
   pname = "edgetx-${cmakeBuildTarget}";
@@ -173,7 +175,7 @@ stdenv.mkDerivation {
   installPhase = ''
     runHook preInstall
     mkdir -p $out/bin
-    cp build/${cmakeBuildTarget} $out/bin/${cmakeBuildTarget}-${buildType}
+    cp build/${cmakeBuildTarget} $out/bin/${output-name}
     rm -rf build
     runHook postInstall
   '';
