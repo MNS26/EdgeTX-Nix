@@ -193,7 +193,7 @@ stdenv.mkDerivation {
       cp -r "${sdcard}/''${folder##*/}" ${sd-path}/
     done
 
-    cd \$HOME/.local/share/edge-tx
+    cd ${sd-path}
     ''}
     $out/bin/.${output-name} "$@"
     EOF
