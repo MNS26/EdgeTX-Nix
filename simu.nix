@@ -197,6 +197,7 @@ stdenv.mkDerivation {
     ''}
     $out/bin/.${output-name} "$@"
     EOF
+    chmod +x $out/bin/${output-name}
   '';
 
   enableParallelBuilding = true;
