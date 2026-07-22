@@ -191,6 +191,7 @@ stdenv.mkDerivation {
     fi
     for folder in ${sdcard}/*; do
       cp -r --no-preserve=mode "\''${folder}" ${sd-path}/
+      chmod 777 -R ${sd-path}
     done
 
     cd ${sd-path}
