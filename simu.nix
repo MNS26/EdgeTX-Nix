@@ -10,8 +10,11 @@
 , python3
 , lib
 , fetchContentDeps
+, fetchzip
 , setupSubmodules ? ""
 , NIX_SYSTEM_INCLUDE_DIRS ? ""
+, sd-path ? null
+, sdcard ? null
 , postPatch ? ""
 , pcb ? "X10",
   pcbrev ? "TX16S",
@@ -175,9 +178,25 @@ stdenv.mkDerivation {
   installPhase = ''
     runHook preInstall
     mkdir -p $out/bin
-    cp build/${cmakeBuildTarget} $out/bin/${output-name}
+    cp build/${cmakeBuildTarget} $out/bin/.${output-name}
     rm -rf build
     runHook postInstall
+
+    cat <<EOF > $out/bin/${output-name}
+    #!/bin/bash
+    ${lib.optionalString (sdcard != null) ''
+
+    if [[ ! -e "${sd-path}" ]]; then
+      mkdir -p ${sd-path}
+    fi
+    for folder in ${sdcard}/*; do
+      cp -r "${sdcard}/''${folder##*/}" ${sd-path}/
+    done
+
+    cd \$HOME/.local/share/edge-tx
+    ''}
+    $out/bin/.${output-name} "$@"
+    EOF
   '';
 
   enableParallelBuilding = true;
