@@ -195,7 +195,7 @@ stdenv.mkDerivation {
 
     cd ${sd-path}
     ''}
-    $out/bin/.${output-name} "$@"
+    $out/bin/.${output-name} "\\$@"
     EOF
     chmod +x $out/bin/${output-name}
   '';
