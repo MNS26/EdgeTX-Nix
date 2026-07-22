@@ -190,7 +190,7 @@ stdenv.mkDerivation {
       mkdir -p ${sd-path}
     fi
     for folder in ${sdcard}/*; do
-      cp -r "\${folder}" ${sd-path}/
+      cp -r "\''${folder}" ${sd-path}/
     done
 
     cd ${sd-path}
